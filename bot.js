@@ -52,9 +52,13 @@ function nowPlaying(){
       
       botResponse = '';
 
-      jsonResult = JSON.parse(textResult);
+      jsonResult = JSON.parse(textResult).results;
 
-      jsonResult.results.forEach(function(movie) {
+      jsonResult.sort(function(a, b) {
+        b.vote_average - a.vote_average
+      });
+
+      jsonResult.forEach(function(movie) {
         postMessage(movie.title + ' – ' + movie.vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)
       });
 
