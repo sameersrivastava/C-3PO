@@ -1,4 +1,5 @@
 var HTTPS = require('https');
+var HTTP = require('http');
 var cool = require('cool-ascii-faces');
 var Pokedex = require('pokedex-promise-v2');
 
@@ -53,7 +54,7 @@ function pokemon(pokemonName){
 
   console.log(options);
 
-  req = HTTPS.request(options, function (res) {
+  req = HTTP.request(options, function (res) {
       var chunks = [];
 
       res.on("data", function (chunk) {
