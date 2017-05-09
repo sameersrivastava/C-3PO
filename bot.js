@@ -48,7 +48,7 @@ function pokemon(pokemonName){
     "method": "GET",
     "hostname": "pokeapi.co",
     "port": null,
-    "path": "/api/v2/pokemon/" + pokemonName,
+    "path": "/api/v2/pokemon/" + pokemonName + "/",
     "headers": {}
   };
 
