@@ -58,6 +58,9 @@ function postMessage() {
   req.write("{}");
   req.end();
 
+  if(botResponse){
+    botResponse = cool();
+  }
 
 
   options = {
