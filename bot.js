@@ -68,7 +68,7 @@ function nowPlaying(){
       }
 
      
-      postMessage(jsonResult[0].title + ' – ' + jsonResult[0].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[0].poster_path, postMessage, callBackOptions)
+      postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path, postMessage, callBackOptions)
       
       /*
       jsonResult.forEach(function(movie) {
