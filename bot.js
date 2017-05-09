@@ -9,7 +9,7 @@ function respond() {
 
   if(request.text && botRegex.test(request.text)) {
     this.res.writeHead(200);
-    postMessage();
+    nowPlaying();
     this.res.end();
   } else {
     console.log("don't care");
@@ -18,21 +18,19 @@ function respond() {
   }
 }
 
-function postMessage() {
-  var botResponse, options, body, botReq;
+function nowPlaying(){
+  let req, chunks, botResponse, textResult, jsonResult;
 
-  //botResponse = cool();
-
-  options = {
+  const options = {
     "method": "GET",
     "hostname": "api.themoviedb.org",
     "port": null,
-    "path": "/3/movie/popular?page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
+    "path": "/3/movie/now_playing?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
     "headers": {}
   };
 
-  var req = HTTPS.request(options, function (res) {
-    var chunks = [];
+  req = HTTPS.request(options, function (res) {
+    chunks = [];
 
     res.on("data", function (chunk) {
       chunks.push(chunk);
@@ -49,55 +47,73 @@ function postMessage() {
     });
 
     res.on("end", function () {
-      var textResult = Buffer.concat(chunks);
+      textResult = Buffer.concat(chunks);
       console.log('json object:    ' + textResult.toString());
+      
       botResponse = '';
 
       jsonResult = JSON.parse(textResult);
 
       jsonResult.results.forEach(function(movie) {
-        botResponse += movie.title;
+        postMessage(movie.title + ' – ' + movie.vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)
       });
 
-      //Send data to GroupMe
-      if(typeof botResponse == 'undefined'){
-        botResponse = cool();
-      }
 
-
-      options = {
-        hostname: 'api.groupme.com',
-        path: '/v3/bots/post',
-        method: 'POST'
-      };
-
-      body = {
-        "bot_id" : botID,
-        "text" : botResponse
-      };
-
-      console.log('sending ' + botResponse + ' to ' + botID);
-
-      botReq = HTTPS.request(options, function(res) {
-          if(res.statusCode == 202) {
-            //neat
-          } else {
-            console.log('rejecting bad status code ' + res.statusCode);
-          }
-      });
-
-      botReq.on('error', function(err) {
-        console.log('error posting message '  + JSON.stringify(err));
-      });
-      botReq.on('timeout', function(err) {
-        console.log('timeout posting message '  + JSON.stringify(err));
-      });
-      botReq.end(JSON.stringify(body));
     });
   });
 
   req.write("{}");
   req.end();
+
+}
+
+function postMessage(botResponse, imageURL) {
+  imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
+
+  let botReq;
+
+  const options = {
+    hostname: 'api.groupme.com',
+    path: '/v3/bots/post',
+    method: 'POST'
+  };
+  if( imageURL === 'textOnly'){
+    const body = {
+      "bot_id" : botID,
+      "text" : botResponse
+    };  
+  } else {
+    const body = {
+      "bot_id" : botID,
+      "text" : botResponse,
+      "attachments" : [
+          {
+            "type"  : "image",
+            "url"   : imageURL
+          }
+        ]
+    };
+  }
+  
+
+  console.log('sending ' + botResponse + ' to ' + botID);
+
+  botReq = HTTPS.request(options, function(res) {
+      if(res.statusCode == 202) {
+        //neat
+      } else {
+        console.log('rejecting bad status code ' + res.statusCode);
+      }
+  });
+
+  botReq.on('error', function(err) {
+    console.log('error posting message '  + JSON.stringify(err));
+  });
+  botReq.on('timeout', function(err) {
+    console.log('timeout posting message '  + JSON.stringify(err));
+  });
+  botReq.end(JSON.stringify(body));
+
 
   
 }
