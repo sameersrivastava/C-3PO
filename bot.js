@@ -49,11 +49,13 @@ function postMessage() {
     });
 
     res.on("end", function () {
-      var wholeResult = Buffer.concat(chunks);
-      console.log('json object:    ' + wholeResult.toString());
+      var textResult = Buffer.concat(chunks);
+      console.log('json object:    ' + textResult.toString());
       botResponse = '';
 
-      wholeResult.results.forEach(function(movie) {
+      jsonResult = JSON.parse(textResult);
+
+      jsonResult.results.forEach(function(movie) {
         botResponse += movie.title;
       });
 
