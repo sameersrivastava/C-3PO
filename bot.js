@@ -60,7 +60,7 @@ function nowPlaying(){
 
       var total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
-      for(var i = 0; i < total < i += 1) {
+      for(var i = 0; i < total ; i += 1) {
         postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path)
       }
       /*
