@@ -57,8 +57,8 @@ function postMessage() {
 
   req.write("{}");
   req.end();
-
-  if(botResponse){
+  
+  if(typeof botResponse == 'undefined'){
     botResponse = cool();
   }
 
