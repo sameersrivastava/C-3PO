@@ -40,29 +40,51 @@ function respond() {
 function pokemon(pokemonName){
   var req, chunks, botResponse, textResult, jsonResult;
 
-  console.log('in pokemon function');
-  var P = new Pokedex();
-
-  P.getPokemonByName(pokemonName, function(response, error) { // with callback
-      if(!error) {
-        console.log(response);
-        postMessage('Found ' + pokemonName, response.sprites.front_default)
-      } else {
-        console.log(error)
-        postMessage('Cannot find that pokemon!', 'https://sickr.files.wordpress.com/2016/02/missingno.jpg');
-      }
-    });
-
-
-  /*
   const options = {
     "method": "GET",
-    "hostname": "api.themoviedb.org",
+    "hostname": "pokeapi.co",
     "port": null,
-    "path": "/3/movie/" + requestType + "?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
+    "path": "/api/v2/pokemon/" + pokemonName,
     "headers": {}
   };
 
+  req = http.request(options, function (res) {
+      var chunks = [];
+
+      res.on("data", function (chunk) {
+          chunks.push(chunk);
+      });
+
+      res.on('error', function(err) {
+        console.log('error getting movie data '  + JSON.stringify(err));
+        botResponse = 'error getting movie data '  + JSON.stringify(err)
+      });
+
+      res.on('timeout', function(err) {
+        console.log('timeout getting movie data message '  + JSON.stringify(err));
+        botResponse = 'timeout getting movie data message '  + JSON.stringify(err);
+      });
+
+      res.on("end", function () {
+          var body = Buffer.concat(chunks);
+          console.log(JSON.parse(body.toString()));
+
+          pokemonObject = JSON.parse(textResult);
+
+          postMessage('Found ' + pokemonObject.name, pokemonObject.sprites.front_default);
+
+      });
+  });
+
+  req.end();
+
+
+ 
+
+
+ 
+  
+  /*
   req = HTTPS.request(options, function (res) {
     chunks = [];
 
