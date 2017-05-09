@@ -48,7 +48,7 @@ function pokemon(pokemonName){
     "headers": {}
   };
 
-  req = http.request(options, function (res) {
+  req = HTTPS.request(options, function (res) {
       var chunks = [];
 
       res.on("data", function (chunk) {
