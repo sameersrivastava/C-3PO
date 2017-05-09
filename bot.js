@@ -9,7 +9,7 @@ function respond() {
       commandRegex = /^\//,
       nowPlayingRegex = /^\/movies now playing$/,
       upcomingRegex = /^\/movies upcoming$/,
-      pokemonRegex = /(?=^\/pokemon)(?=^\s*\S+(?:\s+\S+){1}\s*$)/;
+      pokemonRegex = /(?=^\/pokemon)(?=^\s*\S+(?:\s+\S+){1}\s*$)/gm;
 
   if(request.text && commandRegex.test(request.text)) {
     if(nowPlayingRegex.test(request.text)){
@@ -40,7 +40,7 @@ function respond() {
 function pokemon(pokemonName){
   var req, chunks, botResponse, textResult, jsonResult;
 
-
+  console.log('in pokemon function');
   var P = new Pokedex();
 
   P.getPokemonByName(pokemonName, function(response, error) { // with callback
