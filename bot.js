@@ -54,9 +54,9 @@ function nowPlaying(){
 
       jsonResult = JSON.parse(textResult).results;
 
-      jsonResult.sort(function(a, b) {
+      /*jsonResult.sort(function(a, b) {
         b.vote_average - a.vote_average
-      });
+      });*/
 
       var total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
