@@ -56,20 +56,13 @@ function nowPlaying(){
 
       /*jsonResult.sort(function(a, b) {
         b.vote_average - a.vote_average
-      });*/ 
+      });*/
 
       var total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
-      const callBackOptions = {
-        type: 'movie-list',
-        list: jsonResult,
-        index: 1,
-        total: total
+      for(var i = 0; i < total ; i += 1) {
+        postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path)
       }
-
-     
-      postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path, postMessage, callBackOptions)
-      
       /*
       jsonResult.forEach(function(movie) {
         postMessage(movie.title + ' – ' + movie.vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)
@@ -84,7 +77,7 @@ function nowPlaying(){
 
 }
 
-function postMessage(botResponse, imageURL, callBack, callBackOptions) {
+function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
 
   var botReq, body;
@@ -129,20 +122,7 @@ function postMessage(botResponse, imageURL, callBack, callBackOptions) {
   botReq.on('timeout', function(err) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
-  botReq.on('end', function () {
-    //JSON.stringify(body);
-    if(typeof callBackOptions != 'undefined'){
-      if(callBackOptions.type === 'movie-list'){
-        if(callBackOptions.index < callBackOptions.total){
-          var newCallBackOptions = callBackOptions, list = callBackOptions.list;
-          newCallBackOptions.index = newCallBackOptions.index + 1;
-          callBack(list[i].title + ' – ' + list[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + list[i].poster_path, postMessage, newCallBackOptions);
-        }
-      }
-    } else {
-      callBack();
-    }
-  });
+  botReq.end(JSON.stringify(body));
 
 }
 
