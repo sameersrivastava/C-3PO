@@ -130,11 +130,9 @@ function postMessage(botResponse, imageURL, callBack, callBackOptions) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
   botReq.on('end', function () {
-    console.log('request sent');
-    JSON.stringify(body);
+    //JSON.stringify(body);
     if(typeof callBackOptions != 'undefined'){
       if(callBackOptions.type === 'movie-list'){
-        console.log('movie-list callback');
         if(callBackOptions.index < callBackOptions.total){
           var newCallBackOptions = callBackOptions, list = callBackOptions.list;
           newCallBackOptions.index = newCallBackOptions.index + 1;
@@ -142,9 +140,7 @@ function postMessage(botResponse, imageURL, callBack, callBackOptions) {
         }
       }
     } else {
-      if(typeof callBack != 'undefined'){
-        callBack();  
-      }
+      callBack();
     }
   });
 
