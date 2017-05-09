@@ -37,21 +37,21 @@ function respond() {
 }
 
 
-function pokemon(pokemon){
+function pokemon(pokemonName){
   var req, chunks, botResponse, textResult, jsonResult;
 
 
   var P = new Pokedex();
 
-  P.getPokemonByName(pokemon) // with Promise
-      .then(function(response) {
+  P.getPokemonByName(pokemonName, function(response, error) { // with callback
+      if(!error) {
         console.log(response);
-        postMessage('Found that pokemon');
-      })
-      .catch(function(error) {
-        console.log('There was an ERROR: ', error);
-        postMessage('Could not find that pokemon');
-  });
+        postMessage('Found ' + pokemonName, response.sprites.front_default)
+      } else {
+        console.log(error)
+        postMessage('Cannot find that pokemon!', 'https://sickr.files.wordpress.com/2016/02/missingno.jpg');
+      }
+    });
 
 
   /*
