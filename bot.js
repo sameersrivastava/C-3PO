@@ -13,36 +13,38 @@ function respond() {
       pokemonRegex = /(?=^\/pokemon)(?=^\s*\S+(?:\s+\S+){1}\s*$)/gm;
 
   if(request.text && commandRegex.test(request.text)) {
-    if(nowPlayingRegex.test(request.text)){
+    if(nowPlayingRegex.test(request.text)){ //command = /movies now playing
       this.res.writeHead(200);
       moviesAPI('now_playing');
       this.res.end();
-    } else if(upcomingRegex.test(request.text)){
+    } else if(upcomingRegex.test(request.text)){ //command = /movies upcoming
       this.res.writeHead(200);
       moviesAPI('upcoming');
       this.res.end();
-    } else if(pokemonRegex.test(request.text)){
+    } else if(pokemonRegex.test(request.text)){ //command = /pokemon <pokemonName>
       this.res.writeHead(200);
       pokemon(request.text.split(' ')[1]);
       this.res.end();
-    } else {
+    } else { //command = /<command does not exist>
       this.res.writeHead(200);
       postMessage('This is not the command you are looking for.', 'https://cdn.meme.am/cache/instances/folder859/500x/49467859/jedi-knight-this-is-not-the-webpage-you-are-looking-for.jpg');
       this.res.end();
     }
   } else {
-    console.log("don't care");
+    console.log("Not a command");
     this.res.writeHead(200);
     this.res.end();
   }
 }
 
-
-function pokemon(pokemonName){
-  var req, chunks, botResponse, textResult, jsonResult;
-
-  console.log("Looking for:");
-  console.log(pokemonName);
+/*
+* Sends a get request to the pokeapi (http://pokeapi.co/) to get the pokemon passed in the 
+* function. Will print out a sprite if it finds the pokemon. Otherwise gives a Missingno.
+* 
+* @param pokemonName name or number of the pokemon you want
+*/
+function pokemon(pokemonName){ 
+  var req, chunks, body, pokemonObject;
 
   const options = {
     "method": "GET",
@@ -52,10 +54,8 @@ function pokemon(pokemonName){
     "headers": {}
   };
 
-  console.log(options);
-
   req = HTTP.request(options, function (res) {
-      var chunks = [];
+      chunks = [];
 
       res.on("data", function (chunk) {
           chunks.push(chunk);
@@ -63,17 +63,15 @@ function pokemon(pokemonName){
 
       res.on('error', function(err) {
         console.log('error getting pokemon data '  + JSON.stringify(err));
-        botResponse = 'error getting pokemon data '  + JSON.stringify(err)
       });
 
       res.on('timeout', function(err) {
         console.log('timeout getting pokemon data message '  + JSON.stringify(err));
-        botResponse = 'timeout getting pokemon data message '  + JSON.stringify(err);
       });
 
       res.on("end", function () {
-          var body = Buffer.concat(chunks);
-          console.log('response: ' + body.toString());
+          body = Buffer.concat(chunks);
+          //console.log('response: ' + body.toString());
 
           pokemonObject = JSON.parse(body);
 
@@ -89,8 +87,14 @@ function pokemon(pokemonName){
   req.end();
 }
 
+/*
+* Sends a get request to the MovieDB (api.themoviedb.org) to get the upcoming or now playing 
+* movies. It limits the list to the top 10 most popular movies in each respective category.
+* 
+* @param requestType type of request to send to the MovieDB API (currently supports upcoming and now_playing)
+*/
 function moviesAPI(requestType){
-  var req, chunks, botResponse, textResult, jsonResult;
+  var req, chunks, botResponse, textResult, jsonResult, total, i;
 
   const options = {
     "method": "GET",
@@ -119,15 +123,15 @@ function moviesAPI(requestType){
 
     res.on("end", function () {
       textResult = Buffer.concat(chunks);
-      console.log('json object:    ' + textResult.toString());
+      //console.log('json object:    ' + textResult.toString());
       
       botResponse = '';
 
       jsonResult = JSON.parse(textResult).results;
 
-      var total = (jsonResult.length < 11) ? jsonResult.length : 10;
+      total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
-      for(var i = 0; i < total ; i += 1) {
+      for(i = 0; i < total ; i += 1) {
         postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path)
       }
 
@@ -138,6 +142,13 @@ function moviesAPI(requestType){
   req.end();
 }
 
+/*
+* Sends a post request to the groupe me api. This is what the "bot" sends to the group based off
+* reading the message commands. 
+*
+* @param botResponse Text response
+* @param imageURL url of image if image posts are made 
+*/
 
 function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
