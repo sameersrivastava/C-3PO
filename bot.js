@@ -1,5 +1,6 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
+var Pokedex = require('pokedex-promise-v2');
 
 var botID = process.env.BOT_ID;
 
@@ -7,7 +8,8 @@ function respond() {
   var request = JSON.parse(this.req.chunks[0]),
       commandRegex = /^\//,
       nowPlayingRegex = /^\/movies now playing$/,
-      upcomingRegex = /^\/movies upcoming$/;
+      upcomingRegex = /^\/movies upcoming$/,
+      pokemonRegex = /(?=^\/pokemon)(?=^\s*\S+(?:\s+\S+){1}\s*$)/;
 
   if(request.text && commandRegex.test(request.text)) {
     if(nowPlayingRegex.test(request.text)){
@@ -17,6 +19,10 @@ function respond() {
     } else if(upcomingRegex.test(request.text)){
       this.res.writeHead(200);
       moviesAPI('upcoming');
+      this.res.end();
+    } else if(pokemonRegex.test(request.text)){
+      this.res.writeHead(200);
+      pokemon(request.text.split()[1]);
       this.res.end();
     } else {
       this.res.writeHead(200);
@@ -30,9 +36,25 @@ function respond() {
   }
 }
 
-function moviesAPI(requestType){
+
+function pokemon(pokemon){
   var req, chunks, botResponse, textResult, jsonResult;
 
+
+  var P = new Pokedex();
+
+  P.getPokemonByName(pokemon) // with Promise
+      .then(function(response) {
+        console.log(response);
+        postMessage('Found that pokemon');
+      })
+      .catch(function(error) {
+        console.log('There was an ERROR: ', error);
+        postMessage('Could not find that pokemon');
+  });
+
+
+  /*
   const options = {
     "method": "GET",
     "hostname": "api.themoviedb.org",
@@ -66,28 +88,23 @@ function moviesAPI(requestType){
 
       jsonResult = JSON.parse(textResult).results;
 
-      /*jsonResult.sort(function(a, b) {
-        b.vote_average - a.vote_average
-      });*/
+     
 
       var total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
       for(var i = 0; i < total ; i += 1) {
         postMessage(jsonResult[i].title + ' – ' + jsonResult[i].vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + jsonResult[i].poster_path)
       }
-      /*
-      jsonResult.forEach(function(movie) {
-        postMessage(movie.title + ' – ' + movie.vote_average + '/10', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)
-      });*/
-
 
     });
   });
 
   req.write("{}");
   req.end();
+  */
 
 }
+
 
 function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
