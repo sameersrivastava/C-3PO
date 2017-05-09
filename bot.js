@@ -51,7 +51,11 @@ function postMessage() {
     res.on("end", function () {
       var wholeResult = Buffer.concat(chunks);
       console.log(wholeResult.toString());
-      botResponse = wholeResult.toString();
+      botResponse = '';
+
+      wholeResult.results.forEach(function(movie) {
+        botResponse += movie.title;
+      });
 
       //Send data to GroupMe
       if(typeof botResponse == 'undefined'){
