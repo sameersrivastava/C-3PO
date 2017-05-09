@@ -50,7 +50,7 @@ function postMessage() {
 
     res.on("end", function () {
       var wholeResult = Buffer.concat(chunks);
-      console.log(body.toString());
+      console.log(wholeResult.toString());
       botResponse = wholeResult.toString();
 
       //Send data to GroupMe
