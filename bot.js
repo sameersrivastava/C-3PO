@@ -22,7 +22,7 @@ function respond() {
       this.res.end();
     } else if(pokemonRegex.test(request.text)){
       this.res.writeHead(200);
-      pokemon(request.text.split()[1]);
+      pokemon(request.text.split(' ')[1]);
       this.res.end();
     } else {
       this.res.writeHead(200);
@@ -74,7 +74,11 @@ function pokemon(pokemonName){
 
           pokemonObject = JSON.parse(body);
 
-          postMessage('Found ' + pokemonObject.name, pokemonObject.sprites.front_default);
+          if(pokemonObject.pokemonName) {
+            postMessage('This is not the command you are looking for.', 'https://cdn.meme.am/cache/instances/folder859/500x/49467859/jedi-knight-this-is-not-the-webpage-you-are-looking-for.jpg');
+          } else {
+            postMessage('Found ' + pokemonObject.name, pokemonObject.sprites.front_default);
+          }
 
       });
   });
