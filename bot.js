@@ -19,7 +19,7 @@ function respond() {
 }
 
 function nowPlaying(){
-  let req, chunks, botResponse, textResult, jsonResult;
+  var req, chunks, botResponse, textResult, jsonResult;
 
   const options = {
     "method": "GET",
@@ -70,7 +70,7 @@ function nowPlaying(){
 function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
 
-  let botReq;
+  var botReq;
 
   const options = {
     hostname: 'api.groupme.com',
@@ -114,8 +114,6 @@ function postMessage(botResponse, imageURL) {
   });
   botReq.end(JSON.stringify(body));
 
-
-  
 }
 
 
