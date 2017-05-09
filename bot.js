@@ -77,7 +77,7 @@ function pokemon(pokemonName){
 
           pokemonObject = JSON.parse(body);
 
-          if(pokemonObject.pokemonName) {
+          if(pokemonObject.detail === 'Not found.') {
             postMessage('This is not the command you are looking for.', 'https://cdn.meme.am/cache/instances/folder859/500x/49467859/jedi-knight-this-is-not-the-webpage-you-are-looking-for.jpg');
           } else {
             postMessage('Found ' + pokemonObject.name, pokemonObject.sprites.front_default);
