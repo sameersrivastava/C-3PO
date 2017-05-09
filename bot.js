@@ -40,10 +40,12 @@ function postMessage() {
 
     res.on('error', function(err) {
       console.log('error getting movie data '  + JSON.stringify(err));
+      botResponse = 'error getting movie data '  + JSON.stringify(err)
     });
 
     res.on('timeout', function(err) {
       console.log('timeout getting movie data message '  + JSON.stringify(err));
+      botResponse = 'timeout getting movie data message '  + JSON.stringify(err);
     });
 
     res.on("end", function () {
