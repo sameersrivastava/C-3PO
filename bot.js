@@ -51,6 +51,8 @@ function pokemon(pokemonName){
     "headers": {}
   };
 
+  console.log(options);
+
   req = HTTPS.request(options, function (res) {
       var chunks = [];
 
@@ -70,7 +72,7 @@ function pokemon(pokemonName){
 
       res.on("end", function () {
           var body = Buffer.concat(chunks);
-          console.log(body.toString());
+          console.log('response: ' + body.toString());
 
           pokemonObject = JSON.parse(body);
 
@@ -84,14 +86,19 @@ function pokemon(pokemonName){
   });
 
   req.end();
+}
 
+function moviesAPI(requestType){
+  var req, chunks, botResponse, textResult, jsonResult;
 
- 
+  const options = {
+    "method": "GET",
+    "hostname": "api.themoviedb.org",
+    "port": null,
+    "path": "/3/movie/" + requestType + "?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
+    "headers": {}
+  };
 
-
- 
-  
-  /*
   req = HTTPS.request(options, function (res) {
     chunks = [];
 
@@ -117,8 +124,6 @@ function pokemon(pokemonName){
 
       jsonResult = JSON.parse(textResult).results;
 
-     
-
       var total = (jsonResult.length < 11) ? jsonResult.length : 10;
 
       for(var i = 0; i < total ; i += 1) {
@@ -130,8 +135,6 @@ function pokemon(pokemonName){
 
   req.write("{}");
   req.end();
-  */
-
 }
 
 
