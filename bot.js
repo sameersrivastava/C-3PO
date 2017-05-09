@@ -9,7 +9,7 @@ function respond() {
 
   if(request.text && botRegex.test(request.text)) {
     this.res.writeHead(200);
-    postMessage("Let me get the movies playing now for you","textOnly", nowPlaying);
+    postMessage('Let me get the movies playing now for you','textOnly', nowPlaying);
     this.res.end();
   } else {
     console.log("don't care");
@@ -122,7 +122,7 @@ function postMessage(botResponse, imageURL, callBack) {
   botReq.on('timeout', function(err) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
-  botReq.on('end', function() {
+  botReq.end(function() {
     JSON.stringify(body);
     callBack();
   });
