@@ -26,7 +26,9 @@ function nowPlaying(){
     "hostname": "api.themoviedb.org",
     "port": null,
     "path": "/3/movie/now_playing?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
-    "headers": {}
+    "headers": { 
+      'Content-Length':Buffer.byteLength(data)
+    }
   };
 
   req = HTTPS.request(options, function (res) {
@@ -85,7 +87,10 @@ function postMessage(botResponse, imageURL, callBack) {
   const options = {
     hostname: 'api.groupme.com',
     path: '/v3/bots/post',
-    method: 'POST'
+    method: 'POST',
+    headers: { 
+      'Content-Length':Buffer.byteLength(botResponse)
+    }
   };
   if( imageURL === 'textOnly'){
     body = {
