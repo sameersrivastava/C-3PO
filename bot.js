@@ -9,7 +9,7 @@ function respond() {
 
   if(request.text && botRegex.test(request.text)) {
     this.res.writeHead(200);
-    postMessage('Let me get the movies playing now for you','textOnly', nowPlaying);
+    nowPlaying();
     this.res.end();
   } else {
     console.log("don't care");
@@ -77,7 +77,7 @@ function nowPlaying(){
 
 }
 
-function postMessage(botResponse, imageURL, callBack) {
+function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
 
   var botReq, body;
@@ -122,10 +122,7 @@ function postMessage(botResponse, imageURL, callBack) {
   botReq.on('timeout', function(err) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
-  botReq.end(function() {
-    JSON.stringify(body);
-    callBack();
-  });
+  botReq.end(JSON.stringify(body));
 
 }
 
