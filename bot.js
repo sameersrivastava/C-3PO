@@ -70,7 +70,7 @@ function pokemon(pokemonName){
 
       res.on("end", function () {
           var body = Buffer.concat(chunks);
-          console.log(JSON.parse(body.toString()));
+          console.log(body.toString());
 
           pokemonObject = JSON.parse(body);
 
