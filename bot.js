@@ -5,12 +5,24 @@ var botID = process.env.BOT_ID;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
-      botRegex = /^\/cool guy$/;
+      commandRegex = /^\//,
+      nowPlayingRegex = /^\/movies now playing$/,
+      upcomingRegex = /^\/movies upcoming$/;
 
-  if(request.text && botRegex.test(request.text)) {
-    this.res.writeHead(200);
-    nowPlaying();
-    this.res.end();
+  if(request.text && commandRegex.test(request.text)) {
+    if(nowPlayingRegex.test(request.text)){
+      this.res.writeHead(200);
+      moviesAPI('now_playing');
+      this.res.end();
+    } else if(upcomingRegex.test(request.text)){
+      this.res.writeHead(200);
+      moviesAPI('upcoming');
+      this.res.end();
+    } else {
+      this.res.writeHead(200);
+      postMessage('This is not the command you are looking for.', 'https://cdn.meme.am/cache/instances/folder859/500x/49467859/jedi-knight-this-is-not-the-webpage-you-are-looking-for.jpg');
+      this.res.end();
+    }
   } else {
     console.log("don't care");
     this.res.writeHead(200);
@@ -18,14 +30,14 @@ function respond() {
   }
 }
 
-function nowPlaying(){
+function moviesAPI(requestType){
   var req, chunks, botResponse, textResult, jsonResult;
 
   const options = {
     "method": "GET",
     "hostname": "api.themoviedb.org",
     "port": null,
-    "path": "/3/movie/now_playing?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
+    "path": "/3/movie/" + requestType + "?region=US&page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
     "headers": {}
   };
 
