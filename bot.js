@@ -21,7 +21,42 @@ function respond() {
 function postMessage() {
   var botResponse, options, body, botReq;
 
-  botResponse = cool();
+  //botResponse = cool();
+
+  options = {
+    "method": "GET",
+    "hostname": "api.themoviedb.org",
+    "port": null,
+    "path": "/3/movie/popular?page=1&language=en-US&api_key=12ba888193247c7cd0bf90ddfd87a29b",
+    "headers": {}
+  };
+
+  var req = http.request(options, function (res) {
+    var chunks = [];
+
+    res.on("data", function (chunk) {
+      chunks.push(chunk);
+    });
+
+    res.on('error', function(err) {
+      console.log('error getting movie data '  + JSON.stringify(err));
+    });
+
+    res.on('timeout', function(err) {
+      console.log('timeout getting movie data message '  + JSON.stringify(err));
+    });
+
+    res.on("end", function () {
+      var wholeResult = Buffer.concat(chunks);
+      console.log(body.toString());
+      botResponse = wholeResult.toString();
+    });
+  });
+
+  req.write("{}");
+  req.end();
+
+
 
   options = {
     hostname: 'api.groupme.com',
