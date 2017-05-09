@@ -50,7 +50,7 @@ function postMessage() {
 
     res.on("end", function () {
       var wholeResult = Buffer.concat(chunks);
-      console.log(wholeResult.toString());
+      console.log('json object:    ' + wholeResult.toString());
       botResponse = '';
 
       wholeResult.results.forEach(function(movie) {
