@@ -70,7 +70,7 @@ function nowPlaying(){
 function postMessage(botResponse, imageURL) {
   imageURL = (typeof imageURL === 'undefined') ? 'textOnly' : imageURL;
 
-  var botReq;
+  var botReq, body;
 
   const options = {
     hostname: 'api.groupme.com',
@@ -78,12 +78,12 @@ function postMessage(botResponse, imageURL) {
     method: 'POST'
   };
   if( imageURL === 'textOnly'){
-    const body = {
+    body = {
       "bot_id" : botID,
       "text" : botResponse
     };  
   } else {
-    const body = {
+    body = {
       "bot_id" : botID,
       "text" : botResponse,
       "attachments" : [
