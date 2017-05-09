@@ -31,7 +31,7 @@ function postMessage() {
     "headers": {}
   };
 
-  var req = http.request(options, function (res) {
+  var req = HTTPS.request(options, function (res) {
     var chunks = [];
 
     res.on("data", function (chunk) {
