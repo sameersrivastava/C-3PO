@@ -40,6 +40,9 @@ function respond() {
 function pokemon(pokemonName){
   var req, chunks, botResponse, textResult, jsonResult;
 
+  console.log("Looking for:");
+  console.log(pokemonName);
+
   const options = {
     "method": "GET",
     "hostname": "pokeapi.co",
@@ -56,20 +59,20 @@ function pokemon(pokemonName){
       });
 
       res.on('error', function(err) {
-        console.log('error getting movie data '  + JSON.stringify(err));
-        botResponse = 'error getting movie data '  + JSON.stringify(err)
+        console.log('error getting pokemon data '  + JSON.stringify(err));
+        botResponse = 'error getting pokemon data '  + JSON.stringify(err)
       });
 
       res.on('timeout', function(err) {
-        console.log('timeout getting movie data message '  + JSON.stringify(err));
-        botResponse = 'timeout getting movie data message '  + JSON.stringify(err);
+        console.log('timeout getting pokemon data message '  + JSON.stringify(err));
+        botResponse = 'timeout getting pokemon data message '  + JSON.stringify(err);
       });
 
       res.on("end", function () {
           var body = Buffer.concat(chunks);
           console.log(JSON.parse(body.toString()));
 
-          pokemonObject = JSON.parse(textResult);
+          pokemonObject = JSON.parse(body);
 
           postMessage('Found ' + pokemonObject.name, pokemonObject.sprites.front_default);
 
